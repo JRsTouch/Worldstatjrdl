@@ -32,25 +32,62 @@ function getContinentByName($pdo)
 }
 
 //PARTIE CONTINENT
-function nbCountriesByContinent()
+function nbCountriesByContinent($pdo ,$continent)
 {
-	//Nombre de pays par continent
+	$sql= 'SELECT COUNT(country.Name) AS nbr FROM country WHERE continent=:continent;';
+	$stmt = $pdo->prepare($sql);
+	$stmt->bindParam(':continent', $continent);
+	$stmt->execute();
+	$row = $stmt->fetch(PDO::FETCH_ASSOC);
+	return $row['nbr'];
 }
 
-function nbPopulationByContinent()
+function nbPopulationByContinent($pdo ,$continent)
 {
-	//Population par continent
+	$sql= 'SELECT country.Population FROM `country` WHERE continent="'.$continent.'" GROUP BY country.Continent';
+	$stmt = $pdo->query($sql);
+	$row = $stmt->fetch(PDO::FETCH_ASSOC);
+	return $row;	
 }
 
-function totalAreaByContinent()
+function totalAreaByContinent($pdo ,$continent)
 {
-	//Surface totale par continent
-	//Pourcentage de la surface totale habitée ?
+	$sql= 'SELECT SUM(country.SurfaceArea) as nbr FROM `country` WHERE continent="'.$continent.'" GROUP BY country.Continent';
+	$stmt = $pdo->query($sql);
+	$row = $stmt->fetch(PDO::FETCH_ASSOC);
+	return $row['nbr'];
 }
 
-function averageLifeByContinent()
+function totalAreaGlobal($pdo)
 {
-	//Espérance de vie moyenne
+	$sql= 'SELECT SUM(country.SurfaceArea) as nbr FROM `country`';
+	$stmt = $pdo->query($sql);
+	$row = $stmt->fetch(PDO::FETCH_ASSOC);
+	return $row['nbr'];
+}
+
+function mostpeopleIn($pdo ,$continent)
+{
+	$sql='SELECT country.Name FROM `country` WHERE continent="'.$continent.'" ORDER BY Population DESC LIMIT 1';
+	$stmt = $pdo->query($sql);
+	$row = $stmt->fetch(PDO::FETCH_ASSOC);
+	return $row['Name'];	
+}
+
+function averageLifeByContinent($pdo ,$continent)
+{
+	$sql='SELECT country.Name,country.LifeExpectancy FROM `country` WHERE continent="'.$continent.'" ORDER BY LifeExpectancy DESC';
+	$stmt = $pdo->query($sql);
+	$row = $stmt->fetch(PDO::FETCH_ASSOC);
+	return $row;	
+}
+
+function AverageLife($pdo ,$continent)
+{
+	$sql= 'SELECT AVG(country.LifeExpectancy) as nbr FROM `country`WHERE continent="'.$continent.'"';
+	$stmt = $pdo->query($sql);
+	$row = $stmt->fetch(PDO::FETCH_ASSOC);
+	return $row['nbr'];
 }
 
 function EconomyByContinent()
