@@ -1,6 +1,6 @@
 <?php 
 	$stringConnection = 'mysql:host=localhost;dbname=world;charset=utf8';
-	$pdo = new PDO($stringConnection, 'root', 'root');
+	$pdo = new PDO($stringConnection, 'root', 'ctgzhcy');
 	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 	// Appel du fichier Functions.php
@@ -16,24 +16,12 @@
 
 	// Declaration des variable des fonctions appelées
 
-	$getCountryByName = getCountryByName($pdo);
-
-	
-	$getCapitalbyCountry = getCapitalbyCountry($pdo, $codeCountry);
-
-	$getMostInhabitedcityByCountry = getMostInhabitedcityByCountry($pdo, $codeCountry);
-
-	$getNumberOfCity = count(getNumberOfCity($pdo, $codeCountry));
-
-	$OfficialLanguage = OfficialLanguage($pdo, $codeCountry);
-
-	$UnOfficialLanguage = UnOfficialLanguage($pdo, $codeCountry);
-
-	$GNP = GNP($pdo, $codeCountry);
 
 	$continent = "..." ;
 	if ( isset($_GET['selectcontinent']) ){
 		$continent = $_GET['selectcontinent'] ;
+	} else {
+		$continent = $_GET['hiddencontinent'];
 	}
 	//echo $continent;
 
@@ -47,6 +35,13 @@
 	$mostpeopleIn = mostpeopleIn($pdo ,$continent);
 	$averageLifeByContinent = averageLifeByContinent($pdo ,$continent);
 	$AverageLife= round((AverageLife($pdo ,$continent)),2);
+	$getCountryByName = getCountryByName($pdo,$continent);
+	$getCapitalbyCountry = getCapitalbyCountry($pdo, $codeCountry);
+	$getMostInhabitedcityByCountry = getMostInhabitedcityByCountry($pdo, $codeCountry);
+	$getNumberOfCity = count(getNumberOfCity($pdo, $codeCountry));
+	$OfficialLanguage = OfficialLanguage($pdo, $codeCountry);
+	$UnOfficialLanguage = UnOfficialLanguage($pdo, $codeCountry);
+	$GNP = GNP($pdo, $codeCountry);
 	
 	//echo $areaRatio;
 	//echo '<pre>';
@@ -76,7 +71,12 @@
 				<?php
 
 				foreach ($getContinentByName as $key => $value) {
-				echo '<option value="'.$value['Continent'].'">'.$value['Continent'].'</option>';
+				
+				echo '<option value="'.$value['Continent'].'"';
+						if ($value['Continent'] == $continent){
+							echo 'selected';
+						}
+						echo '>'.$value['Continent'].'</option>';
 			}
 
 			?>
@@ -114,6 +114,7 @@
 					}
 				?>
 				</select>
+				<input type="hidden" name="hiddencontinent" value="<?php echo $continent; ?>">
 				<input type="submit" name="OK" value="save">
 			</form>
 			

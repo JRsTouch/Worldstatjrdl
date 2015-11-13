@@ -96,8 +96,8 @@ function EconomyByContinent()
 }
 
 // LISTE DES PAYS
-function getCountryByName($pdo){	
-	$sql = 'SELECT Code, Name FROM `country`';
+function getCountryByName($pdo,$continent){	
+	$sql = 'SELECT Code, Name FROM `country` WHERE continent="'.$continent.'"';
 	$stmt = $pdo->query($sql);
 	$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	return $row;
