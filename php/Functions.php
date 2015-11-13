@@ -59,8 +59,11 @@ function EconomyByContinent()
 }
 
 // LISTE DES PAYS
-function getCountryByName()
-{
+function getCountryByName($pdo){	
+	$sql = 'SELECT Code, Name FROM `country`';
+	$stmt = $pdo->query($sql);
+	$row = $stmt->fetchAll(PDO::FETCH_ASSOC);
+	return $row;
 	//Remplir liste déroulante "PAYS"
 } 
 
@@ -70,8 +73,11 @@ function getHeadofStateByCountry()
 	//Capitale par pays
 }
 
-function getMostInhabitedcityByCountry()
-{
+function getMostInhabitedcityByCountry($pdo, $codeCountry){
+	$sql = 'SELECT city.Name FROM city, country WHERE city.CountryCode = country.Code AND country.Code = "'.$codeCountry.'" ORDER BY "city.Population" DESC LIMIT 1';
+	$stmt = $pdo->query($sql);
+	$row = $stmt->fetch(PDO::FETCH_ASSOC);
+	return $row;
 	//Ville la plus habitée du pays
 }
 
@@ -79,6 +85,58 @@ function getPIBbyCountry()
 {
 	//PIB du pays
 }
+
+function getCapitalbyCountry($pdo, $codeCountry){
+	$sql = 'SELECT city.Name FROM city, country WHERE city.CountryCode = country.Code AND country.Capital = city.ID AND country.Code = "'.$codeCountry.'"';
+	$stmt = $pdo->query($sql);
+	$row = $stmt->fetch(PDO::FETCH_ASSOC);
+	return $row;
+	//Capitale
+}
+
+function getNumberOfCity($pdo, $codeCountry){
+	$sql = 'SELECT city.Name FROM city, country WHERE city.CountryCode = country.Code AND country.Code = "'.$codeCountry.'"';
+	$stmt = $pdo->query($sql);
+	$row = $stmt->fetchALL(PDO::FETCH_ASSOC);
+	return $row;
+	//Capitale
+}
+
+function OfficialLanguage($pdo, $codeCountry){
+	$sql = 	'SELECT countrylanguage.Language '.
+			'FROM countrylanguage, country  '.
+			'WHERE countrylanguage.CountryCode = country.Code '.
+			'AND countrylanguage.isOfficial = "T" '.
+			'AND country.Code = "'.$codeCountry.'"';
+	$stmt = $pdo->query($sql);
+	$row = $stmt->fetch(PDO::FETCH_ASSOC);
+	return $row;
+	//Capitale
+}
+
+function UnOfficialLanguage($pdo, $codeCountry){
+	$sql = 	'SELECT countrylanguage.Language, countrylanguage.percentage '.
+			'FROM countrylanguage, country  '.
+			'WHERE countrylanguage.CountryCode = country.Code '.
+			'AND countrylanguage.isOfficial = "F" '.
+			'AND country.Code = "'.$codeCountry.'"';
+	$stmt = $pdo->query($sql);
+	$row = $stmt->fetchALL(PDO::FETCH_ASSOC);
+	return $row;
+	//Capitale
+}
+
+function GNP($pdo, $codeCountry){
+	$sql = 	'SELECT GNP '.
+			'FROM country  '.
+			'WHERE country.Code = "'.$codeCountry.'"';
+	$stmt = $pdo->query($sql);
+	$row = $stmt->fetch(PDO::FETCH_ASSOC);
+	return $row;
+	//Capitale
+}
+
+
 
 
  ?>
